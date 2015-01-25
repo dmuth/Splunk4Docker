@@ -1,0 +1,10 @@
+
+.vagrant
+
+*.pyc
+
+#
+# Ignore the symlink
+#
+vagrant
+

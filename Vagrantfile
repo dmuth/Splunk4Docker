@@ -34,6 +34,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		config.vm.network :forwarded_port, guest: 80, host: 8080
 
 		#
+		# As of Vagrant 1.7, it auto-generates new SSH key.
+		# Sounds like a good idea, except that it causes this Core OS box 
+		# to break. Oops. So instead, we're going to disable that 
+		# behavior for now.
+		#
+		config.ssh.insert_key = false
+
+		#
 		# Set the amount of RAM and CPU cores
 		#
 		host.vm.provider "virtualbox" do |v|

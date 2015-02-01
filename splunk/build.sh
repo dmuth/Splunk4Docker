@@ -3,6 +3,12 @@
 # A wrapper to build our Docker image
 #
 
+#
+# Errors are fatal
+#
+set -e
+
+
 if test ! -f splunk.deb
 then
 	echo "! "

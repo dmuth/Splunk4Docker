@@ -3,6 +3,10 @@
 # This script will be run at run-time by the docker instance
 #
 
+#
+# Errors are fatal
+#
+set -e
 
 #
 # Install Splunk

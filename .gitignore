@@ -8,3 +8,8 @@
 #
 vagrant
 
+#
+# Ignore all Splunk packages
+#
+splunk*.deb
+

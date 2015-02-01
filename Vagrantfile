@@ -31,7 +31,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			id: "core", :nfs => true,  
 			:mount_options   => ['nolock,vers=3,udp']
 
+		#
+		# For reasons unknown, if you try to map to port 8000 on the host 
+		# machine, it causes any operation against Docker to hang.
+		#
 		config.vm.network :forwarded_port, guest: 80, host: 8080
+		config.vm.network :forwarded_port, guest: 8000, host: 8002
 
 		#
 		# As of Vagrant 1.7, it auto-generates new SSH key.
@@ -45,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		# Set the amount of RAM and CPU cores
 		#
 		host.vm.provider "virtualbox" do |v|
-			v.memory = 256
+			v.memory = 512
 			v.cpus = 2
 			#
 			# I don't fully understand these optoins, but they are suggested

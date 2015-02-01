@@ -1,13 +1,6 @@
 
 .vagrant
 
-*.pyc
-
-#
-# Ignore the symlink
-#
-vagrant
-
 #
 # Ignore all Splunk packages
 #

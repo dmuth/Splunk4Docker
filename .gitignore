@@ -6,3 +6,9 @@
 #
 splunk*.deb
 
+#
+# Ignore all logs directories
+#
+*logs/
+
+

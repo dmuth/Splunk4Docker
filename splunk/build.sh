@@ -19,6 +19,6 @@ then
 	exit 1
 fi
 
-docker build -t dmuth/test .
+docker build -t dmuth/splunk .
 
 

@@ -32,11 +32,11 @@ VOLUMES=""
 #
 # Make our logs visible to the outside world
 #
-VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk/logs:/splunk-logs "
+VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk-search-head/logs:/splunk-logs "
 #
 # Put the current directory in as /data-devel for development purposes
 #
-VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk/:/data-devel "
+VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk-search-head/:/data-devel "
 
 
 echo "# "

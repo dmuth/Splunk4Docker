@@ -11,4 +11,11 @@ splunk*.deb
 #
 *logs/
 
+#
+# These are written from templates, so we don't want them in revision control
+#
+splunk-search-head/outputs.conf
+splunk-search-head/distsearch.conf
+
+
 

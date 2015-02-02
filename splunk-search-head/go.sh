@@ -21,6 +21,34 @@ then
 	exit 1
 fi
 
+#
+# cd to the directory that this script is in
+#
+pushd $(dirname $0) > /dev/null
+DIR=$(pwd)
+
+LINKS=""
+INSTANCES=$(docker ps -a |grep indexer | awk '{print $1}')
+
+if test "${INSTANCES}"
+then
+	echo "# "
+	echo "# Indexers found! We'll link to them..."
+	echo "# "
+	INDEX=0
+	for ID in ${INSTANCES}
+	do
+		NAME=$(docker inspect --format {{.Name}} ${ID} | cut -c2-)
+		INDEX=$(($INDEX + 1))
+		LINKS="${LINKS} --link ${NAME}:indexer${INDEX}"
+	done
+
+	echo "# "
+	echo "# Indexers we will link: ${LINKS}"
+	echo "# "
+
+fi
+
 
 echo "# "
 echo "# Building Docker image..."
@@ -32,11 +60,11 @@ VOLUMES=""
 #
 # Make our logs visible to the outside world
 #
-VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk-search-head/logs:/splunk-logs "
+VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs "
 #
 # Put the current directory in as /data-devel for development purposes
 #
-VOLUMES="${VOLUMES} -v /home/core/vagrant/splunk-search-head/:/data-devel "
+VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 
 
 echo "# "
@@ -45,6 +73,7 @@ echo "# "
 docker run -it \
 	-p 8000:8000 \
 	${VOLUMES} \
+	${LINKS} \
 	dmuth/splunk $@
 
 

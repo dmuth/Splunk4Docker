@@ -1,0 +1,8 @@
+
+#
+# Send output to these servers
+#
+[tcpout:docker]
+server = %IPS%
+
+

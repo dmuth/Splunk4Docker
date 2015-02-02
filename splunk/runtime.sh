@@ -30,6 +30,13 @@ echo "# "
 rm -rf /opt/splunk/var/log
 ln -s /splunk-logs/ /opt/splunk/var/log
 
+#
+# Copy in configuration settings
+#
+cp /data-install/inputs.conf /opt/splunk/etc/system/local
+mkdir -p /opt/splunk/etc/users/admin/user-prefs/local
+cp /data-install/user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
+
 
 #
 # Run Splunk in the foreground

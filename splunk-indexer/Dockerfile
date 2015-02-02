@@ -23,6 +23,7 @@ RUN ln -s /opt/splunk /var/splunk
 
 
 EXPOSE 8000
+EXPOSE 8089
 EXPOSE 9997
 
 

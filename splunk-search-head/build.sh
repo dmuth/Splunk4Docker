@@ -19,6 +19,14 @@ then
 	exit 1
 fi
 
+if test -f "outputs.conf"
+then
+	echo "# "
+	echo "# Found stale outputs.conf, removing!"
+	echo "# "
+	rm outputs.conf
+fi
+
 docker build -t dmuth/splunk .
 
 

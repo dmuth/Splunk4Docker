@@ -42,6 +42,11 @@ do
 
 	IPS="${IPS}${IP}"
 
+	#
+	# Add the Indexers to our list of Search Peers.
+	# Yes, this is a hardcoded password. This is NOT intended to be used
+	# in production.
+	#
 	echo "/var/splunk/bin/splunk add search-server -host ${IP}:8089 "\
 		"-auth admin:changeme "\
 		"-remoteUsername admin -remotePassword adminpw" >> ${ADD_INDEXERS}

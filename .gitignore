@@ -17,5 +17,8 @@ splunk*.deb
 splunk-search-head/outputs.conf
 splunk-search-head/distsearch.conf
 
-
+#
+# This is written if we are using runtime.sh in development
+#
+add-indexers.sh
 

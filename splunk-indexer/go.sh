@@ -9,12 +9,43 @@
 #
 set -e 
 
+
 #
 # Check our arguments
 #
-if test "$1" == "-h"
+ARG_DETATCH=""
+ARG_HELP=""
+ARG_CMD=""
+
+
+#
+# Parse our arguements. If we find what looks like a command, grab
+# the rest of the argmuents
+#
+while test "$1"
+do
+	ARG=$1
+	if test "$ARG" == "-h"
+	then
+		ARG_HELP=1
+
+	elif test "$ARG" == "-d"
+	then
+		ARG_DETACH="-d "
+
+	else 
+		ARG_CMD=$@
+		break
+
+	fi
+
+	shift
+
+done
+
+if test "$ARG_HELP"
 then
-	echo "Syntax: $0 <command to run in this image>"
+	echo "Syntax: $0 [-d] [<command to run in this image>]"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
@@ -57,9 +88,10 @@ echo "# "
 echo "# Running Docker image..."
 echo "# "
 docker run -it \
+	${ARG_DETACH} \
 	--name indexer1 \
 	${PORTS} \
 	${VOLUMES} \
-	dmuth/splunk $@
+	dmuth/splunk ${ARG_CMD}
 
 

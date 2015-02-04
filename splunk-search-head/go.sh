@@ -105,6 +105,8 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 echo "# "
 echo "# Running Docker image..."
 echo "# "
+echo "# It make take 10s of seconds for Splunk to start, be patient or run without -d"
+echo "# "
 docker run -it \
 	${ARG_DETACH} \
 	-p 8000:8000 \

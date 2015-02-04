@@ -63,7 +63,7 @@ pushd $(dirname $0) > /dev/null
 DIR=$(pwd)
 
 LINKS=""
-INSTANCES=$(docker ps -a |grep indexer | awk '{print $1}')
+INSTANCES=$(docker ps | grep indexer | awk '{print $1}')
 
 if test "${INSTANCES}"
 then
@@ -105,8 +105,14 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 echo "# "
 echo "# Running Docker image..."
 echo "# "
-echo "# It make take 10s of seconds for Splunk to start, be patient or run without -d"
-echo "# "
+
+if test ! "${ARG_DETACH}" -o "${ARG_CMD}"
+then
+	echo "# It make take 10s of seconds for Splunk to start, "
+	echo "# please be patient."
+	echo "# "
+fi
+
 docker run -it \
 	${ARG_DETACH} \
 	-p 8000:8000 \

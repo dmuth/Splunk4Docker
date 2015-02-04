@@ -33,6 +33,7 @@ ln -s /splunk-logs/ /opt/splunk/var/log
 #
 # Copy in configuration settings
 #
+cp /data-install/passwd /opt/splunk/etc/passwd
 cp /data-install/inputs.conf /opt/splunk/etc/system/local
 cp /data-install/server.conf /opt/splunk/etc/system/local
 mkdir -p /opt/splunk/etc/users/admin/user-prefs/local

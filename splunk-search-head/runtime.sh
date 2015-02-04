@@ -85,10 +85,14 @@ ln -s /splunk-logs/ /opt/splunk/var/log
 # Copy in configuration settings
 #
 cp inputs.conf /opt/splunk/etc/system/local
-cp outputs.conf /opt/splunk/etc/system/local
 cp server.conf /opt/splunk/etc/system/local
 mkdir -p /opt/splunk/etc/users/admin/user-prefs/local
 cp user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
+
+if test -f "outputs.conf"
+then
+	cp outputs.conf /opt/splunk/etc/system/local
+fi
 
 
 echo "# "
@@ -101,4 +105,13 @@ echo "# Adding Indexers as Search Peers..."
 echo "# "
 ${ADD_INDEXERS}
 
-
+#
+# Finally, we want this script to run forever so that Docker doesn't exit
+#
+echo "# "
+echo "# Press ^C to end this script and (probably) this Docker container..."
+echo "# "
+while true
+do
+	sleep 300
+done

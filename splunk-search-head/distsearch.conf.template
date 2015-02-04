@@ -1,4 +1,4 @@
 
 [distributedSearch]
-servers = %IPS%
+servers = %IPS%:8089
 

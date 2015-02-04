@@ -18,12 +18,21 @@ LOG="/splunk-logs/output.txt"
 # cd to the directory that this script is in
 #
 pushd $(dirname $0) > /dev/null
-DIR=$(pwd)
 
 #
 # Loop through all indexers and get a comma delimted list of IPs
 #
+# Also, while in this loop, we're going to generate a script which will add 
+# Indexers after Splunk starts
+#
 IPS=""
+ADD_INDEXERS="./add-indexers.sh"
+echo "#!/bin/bash" > ${ADD_INDEXERS}
+echo "# " >> ${ADD_INDEXERS}
+echo "# This script is auto-geneated by $0 -- DO NOT EDIT!" >> ${ADD_INDEXERS}
+echo "# " >> ${ADD_INDEXERS}
+chmod 755 ${ADD_INDEXERS}
+
 for IP in $(set |grep INDEXER |grep 8089 |grep ADDR |cut -d= -f2)
 do
 	if test "$IPS"
@@ -33,16 +42,20 @@ do
 
 	IPS="${IPS}${IP}"
 
+	echo "/var/splunk/bin/splunk add search-server -host ${IP}:8089 "\
+		"-auth admin:changeme "\
+		"-remoteUsername admin -remotePassword adminpw" >> ${ADD_INDEXERS}
+
 done
+
 
 if test "${IPS}" 
 then
 	echo "# "
 	echo "# Found the following Indexers: ${IPS}"
-	echo "# Writing them to outputs.conf and distsearch.conf..."
+	echo "# Writing them to outputs.conf..."
 	echo "# "
 	cat outputs.conf.template | sed -e s/%IPS%/${IPS}/ > outputs.conf
-	cat distsearch.conf.template | sed -e s/%IPS%/${IPS}/ > distsearch.conf
 fi
 
 
@@ -62,10 +75,10 @@ echo "# "
 rm -rf /opt/splunk/var/log
 ln -s /splunk-logs/ /opt/splunk/var/log
 
+
 #
 # Copy in configuration settings
 #
-cp distsearch.conf /opt/splunk/etc/system/local
 cp inputs.conf /opt/splunk/etc/system/local
 cp outputs.conf /opt/splunk/etc/system/local
 cp server.conf /opt/splunk/etc/system/local
@@ -73,12 +86,14 @@ mkdir -p /opt/splunk/etc/users/admin/user-prefs/local
 cp user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
 
 
-#
-# Run Splunk in the foreground
-#
 echo "# "
-echo "# Running Splunk in the foreground..."
+echo "# Starting up Splunk..."
 echo "# "
-/var/splunk/bin/splunk --accept-license start --nodaemon 2>&1 | tee -a ${LOG}
+/var/splunk/bin/splunk --accept-license start 2>&1 | tee -a ${LOG}
+
+echo "# "
+echo "# Adding Indexers as Search Peers..."
+echo "# "
+${ADD_INDEXERS}
 
 

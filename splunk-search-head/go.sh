@@ -116,6 +116,7 @@ fi
 
 docker run -it \
 	${ARG_DETACH} \
+	--name splunk_search_head \
 	-p 8000:8000 \
 	${VOLUMES} \
 	${LINKS} \

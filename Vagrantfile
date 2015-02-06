@@ -49,6 +49,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		# Set the amount of RAM and CPU cores
 		#
 		host.vm.provider "virtualbox" do |v|
+			#
+			# You can try with less RAM, but I had problems when using 
+			# only half a Gig.
+			#
 			v.memory = 1024
 			v.cpus = 2
 			#

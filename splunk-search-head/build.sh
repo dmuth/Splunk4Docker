@@ -27,6 +27,6 @@ then
 	rm outputs.conf
 fi
 
-docker build -t dmuth/splunk .
+docker build -t dmuth/splunk_search_head .
 
 

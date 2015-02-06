@@ -34,8 +34,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		#
 		# Forward our ports out
 		#
+		# Port 80/8080 is for testing
+		# Port 8000 is for our Search Head
+		# Ports 8001-8010 are for Indexers
+		#
 		config.vm.network :forwarded_port, guest: 80, host: 8080
 		config.vm.network :forwarded_port, guest: 8000, host: 8000
+		config.vm.network :forwarded_port, guest: 8001, host: 8001
+		config.vm.network :forwarded_port, guest: 8002, host: 8002
+		config.vm.network :forwarded_port, guest: 8003, host: 8003
+		config.vm.network :forwarded_port, guest: 8004, host: 8004
+		config.vm.network :forwarded_port, guest: 8005, host: 8005
+		config.vm.network :forwarded_port, guest: 8006, host: 8006
+		config.vm.network :forwarded_port, guest: 8007, host: 8007
+		config.vm.network :forwarded_port, guest: 8008, host: 8008
+		config.vm.network :forwarded_port, guest: 8009, host: 8009
+		config.vm.network :forwarded_port, guest: 8010, host: 8010
 
 		#
 		# As of Vagrant 1.7, it auto-generates new SSH key.

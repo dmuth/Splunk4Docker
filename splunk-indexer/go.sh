@@ -15,6 +15,7 @@ set -e
 #
 ARG_DETATCH=""
 ARG_HELP=""
+ARG_FORCE_BUILD=""
 ARG_CMD=""
 
 
@@ -33,6 +34,10 @@ do
 	then
 		ARG_DETACH="-d "
 
+	elif test "$ARG" == "--force-build"
+	then
+		ARG_FORCE_BUILD=1
+
 	else 
 		ARG_CMD=$@
 		break
@@ -45,7 +50,7 @@ done
 
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--force-build] [<command to run in this image>]"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
@@ -55,10 +60,21 @@ fi
 pushd $(dirname $0) > /dev/null
 DIR=$(pwd)
 
-echo "# "
-echo "# Building Docker image..."
-echo "# "
-./build.sh
+if test ! "$(docker images |grep dmuth/splunk_indexer)"
+then
+	echo "# "
+	echo "# Docker image not found! Building..."
+	echo "# "
+	./build.sh
+fi
+
+if test "$ARG_FORCE_BUILD"
+then
+	echo "# "
+	echo "# Forcing an image build..."
+	echo "# "
+	./build.sh
+fi
 
 
 VOLUMES=""
@@ -92,6 +108,6 @@ docker run -it \
 	--name splunk_indexer1 \
 	${PORTS} \
 	${VOLUMES} \
-	dmuth/splunk ${ARG_CMD}
+	dmuth/splunk_indexer ${ARG_CMD}
 
 

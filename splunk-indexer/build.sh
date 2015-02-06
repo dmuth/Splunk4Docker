@@ -19,6 +19,6 @@ then
 	exit 1
 fi
 
-docker build -t dmuth/splunk .
+docker build -t dmuth/splunk_indexer .
 
 

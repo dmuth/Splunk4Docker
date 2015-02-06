@@ -47,7 +47,7 @@ do
 	# Yes, this is a hardcoded password. This is NOT intended to be used
 	# in production.
 	#
-	echo "/var/splunk/bin/splunk add search-server -host ${IP}:8089 "\
+	echo "/opt/splunk/bin/splunk add search-server -host ${IP}:8089 "\
 		"-auth admin:changeme "\
 		"-remoteUsername admin -remotePassword adminpw" >> ${ADD_INDEXERS}
 
@@ -76,7 +76,7 @@ dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
 echo "# "
 echo "# Setting up symlinks for Splunk logs to /splunk-logs/, which is exported from Docker"
 echo "# "
-/var/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
+/opt/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
 rm -rf /opt/splunk/var/log
 ln -s /splunk-logs/ /opt/splunk/var/log
 
@@ -98,7 +98,7 @@ fi
 echo "# "
 echo "# Starting up Splunk..."
 echo "# "
-/var/splunk/bin/splunk --accept-license start 2>&1 | tee -a ${LOG}
+/opt/splunk/bin/splunk --accept-license start 2>&1 | tee -a ${LOG}
 
 echo "# "
 echo "# Adding Indexers as Search Peers..."

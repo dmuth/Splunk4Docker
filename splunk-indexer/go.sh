@@ -76,12 +76,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "indexer" in the name.
 #
-if test "$(docker ps -a |grep indexer | awk '{print $1}')"
+if test "$(docker ps -a |grep splunk_indexer | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm $(docker ps -a |grep indexer | awk '{print $1}')
+	docker rm $(docker ps -a |grep splunk_indexer | awk '{print $1}')
 fi
 
 echo "# "
@@ -89,7 +89,7 @@ echo "# Running Docker image..."
 echo "# "
 docker run -it \
 	${ARG_DETACH} \
-	--name indexer1 \
+	--name splunk_indexer1 \
 	${PORTS} \
 	${VOLUMES} \
 	dmuth/splunk ${ARG_CMD}

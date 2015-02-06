@@ -63,7 +63,7 @@ pushd $(dirname $0) > /dev/null
 DIR=$(pwd)
 
 LINKS=""
-INSTANCES=$(docker ps | grep indexer | awk '{print $1}')
+INSTANCES=$(docker ps | grep splunk_indexer | awk '{print $1}')
 
 if test "${INSTANCES}"
 then
@@ -75,7 +75,7 @@ then
 	do
 		NAME=$(docker inspect --format {{.Name}} ${ID} | cut -c2-)
 		INDEX=$(($INDEX + 1))
-		LINKS="${LINKS} --link ${NAME}:indexer${INDEX}"
+		LINKS="${LINKS} --link ${NAME}:splunk_indexer${INDEX}"
 	done
 
 	echo "# "
@@ -100,6 +100,18 @@ VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs "
 # Put the current directory in as /data-devel for development purposes
 #
 VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
+
+
+#
+# Remove old images with "splunk_search_head" in the name.
+#
+if test "$(docker ps -a |grep splunk_search_head | awk '{print $1}')"
+then
+	echo "# "
+	echo "# Removing old Docker images with this name..."
+	echo "# "
+	docker rm $(docker ps -a |grep splunk_search_head | awk '{print $1}')
+fi
 
 
 echo "# "

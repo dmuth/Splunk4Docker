@@ -47,7 +47,7 @@ done
 #
 # Check our arguments
 #
-if test "$1" == "-h"
+if test "$ARG_HELP"
 then
 	echo "Syntax: $0 [-d] [<command to run in this image>]"
 	echo ""

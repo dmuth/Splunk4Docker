@@ -74,7 +74,7 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #PORTS="-p 8000:8000" # Debugging
 
 #
-# Remove old images with "indexer" in the name.:w
+# Remove old images with "indexer" in the name.
 #
 if test "$(docker ps -a |grep indexer | awk '{print $1}')"
 then

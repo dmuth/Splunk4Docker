@@ -108,6 +108,7 @@ echo "# "
 
 if test ! "${ARG_DETACH}" -o "${ARG_CMD}"
 then
+	echo "# "
 	echo "# It make take 10s of seconds for Splunk to start, "
 	echo "# please be patient."
 	echo "# "

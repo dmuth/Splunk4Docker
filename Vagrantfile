@@ -95,6 +95,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			host.vbguest.auto_update = false
 		end
 
+		#
+		# Provision this instance
+		#
+		host.vm.provision "shell", path: "./provision-vagrant.sh"
+
 	end
 
 end

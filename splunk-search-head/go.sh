@@ -17,6 +17,7 @@ ARG_DETATCH=""
 ARG_HELP=""
 ARG_FORCE_BUILD=""
 ARG_CMD=""
+ARG_NUM=1
 
 
 #
@@ -26,6 +27,8 @@ ARG_CMD=""
 while test "$1"
 do
 	ARG=$1
+	ARG_NEXT=$2
+
 	if test "$ARG" == "-h"
 	then
 		ARG_HELP=1
@@ -37,6 +40,11 @@ do
 	elif test "$ARG" == "--force-build"
 	then
 		ARG_FORCE_BUILD=1
+
+	elif test "$ARG" == "--num"
+	then
+		ARG_NUM=$2
+		shift
 
 	else 
 		ARG_CMD=$@
@@ -54,11 +62,20 @@ done
 #
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [--force-build] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--force-build] [--num <num indexers>] [<command to run in this image>]"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
 	exit 1
+fi
+
+if test "$ARG_NUM" -gt 1
+then
+	echo "# "
+	echo "# Multiple Search Heads requested. Forcing -d for detachment..."
+	echo "# "
+	ARG_DETACH="-d"
+
 fi
 
 #
@@ -112,10 +129,6 @@ fi
 
 VOLUMES=""
 #
-# Make our logs visible to the outside world
-#
-VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs "
-#
 # Put the current directory in as /data-devel for development purposes
 #
 VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
@@ -145,12 +158,31 @@ then
 	echo "# "
 fi
 
-docker run -it \
-	${ARG_DETACH} \
-	--name splunk_search_head \
-	-p 8000:8000 \
-	${VOLUMES} \
-	${LINKS} \
-	dmuth/splunk_search_head ${ARG_CMD}
+
+#
+# Now build our Search Heads!
+#
+for I in $(seq 1 ${ARG_NUM})
+do
+	echo "# "
+	echo "# Running Docker image ${I}/${ARG_NUM}..."
+	echo "# "
+
+	#
+	# Expose  our Splunk data under the data/indexer-X/ directory structure.
+	#
+	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/data/search-head-${I}:/splunk-data"
+
+	PORTS="$((7999 + $I)):8000"
+
+	docker run -it \
+		${ARG_DETACH} \
+		--name splunk_search_head_${I} \
+		-p ${PORTS} \
+		${VOLUMES_LOCAL} \
+		${LINKS} \
+		dmuth/splunk_search_head ${ARG_CMD}
+
+done
 
 

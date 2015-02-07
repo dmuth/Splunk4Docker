@@ -4,7 +4,7 @@
 #
 
 echo "# "
-echo "# Killing all Splunk Search Heads"
+echo "# Killing all Splunk Indexers"
 echo "# "
 
 if test "$(docker ps |grep dmuth/splunk_indexer | awk '{print $1}')"

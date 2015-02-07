@@ -79,7 +79,8 @@ dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
 #
 mkdir -p /opt/splunk/
 ln -s /splunk-data/ /opt/splunk/var
-/var/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
+/opt/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
+
 
 
 #

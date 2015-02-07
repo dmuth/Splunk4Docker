@@ -128,7 +128,7 @@ do
 	#
 	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/data/indexer-${I}:/splunk-data"
 
-	PORTS="$((8000 + $I)):8000"
+	PORTS="$((8009 + $I)):8000"
 
 	docker run -it \
 		${ARG_DETACH} \

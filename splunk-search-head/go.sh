@@ -171,7 +171,7 @@ do
 	#
 	# Expose  our Splunk data under the data/indexer-X/ directory structure.
 	#
-	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/data/search-head-${I}:/splunk-data"
+	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/volumes/search-head-${I}:/splunk-data"
 
 	PORTS="$((7999 + $I)):8000"
 

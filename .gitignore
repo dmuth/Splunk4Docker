@@ -21,6 +21,6 @@ add-indexers.sh
 #
 # This is data exported from the Splunk instances
 #
-splunk-search-head/data/
-splunk-indexer/data/
+splunk-search-head/volumes
+splunk-indexer/volumes
 

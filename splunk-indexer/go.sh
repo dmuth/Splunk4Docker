@@ -124,7 +124,7 @@ do
 	echo "# "
 
 	#
-	# Expose  our Splunk data under the data/indexer-X/ directory structure.
+	# Expose  our Splunk data under the volumes/indexer-X/ directory structure.
 	#
 	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/volumes/indexer-${I}:/splunk-data"
 

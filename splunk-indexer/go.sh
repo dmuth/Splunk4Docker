@@ -97,10 +97,6 @@ fi
 
 VOLUMES=""
 #
-# Make our logs visible to the outside world
-#
-#VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs"
-#
 # Put the current directory in as /data-devel for development purposes
 #
 VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
@@ -127,7 +123,11 @@ do
 	echo "# Running Docker image ${I}/${ARG_NUM}..."
 	echo "# "
 
-	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/logs/indexer-${I}:/splunk-logs"
+	#
+	# Expose  our Splunk data under the data/indexer-X/ directory structure.
+	#
+	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/data/indexer-${I}:/splunk-data"
+
 	PORTS="$((8000 + $I)):8000"
 
 	docker run -it \

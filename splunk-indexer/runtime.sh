@@ -11,7 +11,7 @@ set -e
 #
 # Where to log our command output.
 #
-LOG="/splunk-logs/output.txt"
+LOG="/splunk-data/output.txt"
 
 
 #
@@ -24,11 +24,17 @@ dpkg -i /data-install/splunk.deb 2>&1 | tee -a ${LOG}
 
 
 echo "# "
-echo "# Setting up symlinks for Splunk logs to /splunk-logs/, which is exported from Docker"
+echo "# Setting up symlinks for Splunk logs and data to /splunk-data/, which is exported from Docker"
 echo "# "
+
+#
+# Make our symlinks to /splunk-data/ first, and do it in $SPLUNK_HOME/var/,
+# as Splunk does funny things with symlinks elsewhere when installing it.
+#
+mkdir -p /opt/splunk/
+ln -s /splunk-data/ /opt/splunk/var
 /var/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
-rm -rf /opt/splunk/var/log
-ln -s /splunk-logs/ /opt/splunk/var/log
+
 
 #
 # Copy in configuration settings

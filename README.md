@@ -43,9 +43,21 @@ Now, to spin up 3 Indexers, followed by a Seach Head which talks to them:
 Wait a minute or two, and you should be able to connect to port 8000 on the host machine and log into Splunk.  Run the search `index=_internal` and you should see Splunk's internal logs from 4 hosts (3 Indexers plus one Search Head) listed.  Additionally, all events generated on the Search Head will be forwarded to the 3 Indexers.
 
 
+# Volume Export
+
+Search Head and Indexer containers export the contents of /opt/splunk/var to the Docker Host.  They can be found under `splunk-search-head/volumes` and `splunk-indexer/volumes` with names like `search-head-1` and `indexer-1`, where the number is the number of the host that was created.  These directories will persist after the containers exit and when they are restarted, allowing for log retention.
+
+
+# Debugging Splunk
+
+Logs are stored `spunk-(search-head|indexer)/log/splunk/`.  Logs of interest will be `splunkd.log` for overall system operation and `audit.log` for a list of what searches are being done and what Indexers are connected to.
+
+
 # Known Issues
 
 This works great under CoreOS.  Under Ubuntu 14.04... not so much.  I ran into weird issues with installing Splunk and starting Splunk which seem to be volume-related.  Right now, I am exporting a substatnail portion of the /opt/splunk/ directory to the host running Docker.  This is mostly for debugging issues.  I may revisit this decision later.
+
+`docker restart` does not work correctly.  I tried running `/opt/splunk/bin/splunk enable boot-start` inside each container, but that does not work.
 
 
 # TODO

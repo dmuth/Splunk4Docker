@@ -169,9 +169,17 @@ do
 	echo "# "
 
 	#
-	# Expose  our Splunk data under the data/indexer-X/ directory structure.
+	# Expose our Splunk data under the volumes/search-head-X/ directory structure.
 	#
 	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/volumes/search-head-${I}:/splunk-data"
+
+	#
+	# Create a directory for intake in Splunk and put a dummy file in there
+	#
+	INTAKE="${DIR}/volumes/search-head-intake-${I}/"
+	mkdir -p $INTAKE
+	echo "$(date) test=test2 test2=test3" > ${INTAKE}/test.txt
+	VOLUMES_LOCAL="${VOLUMES_LOCAL} -v ${INTAKE}:/logs"
 
 	PORTS="$((7999 + $I)):8000"
 

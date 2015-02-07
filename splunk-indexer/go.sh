@@ -128,6 +128,14 @@ do
 	#
 	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/volumes/indexer-${I}:/splunk-data"
 
+	#
+	# Create a directory for intake in Splunk and put a dummy file in there
+	#
+	INTAKE="${DIR}/volumes/indexer-intake-${I}/"
+	mkdir -p $INTAKE
+	echo "$(date) test=test2 test2=test3" > ${INTAKE}/test.txt
+	VOLUMES_LOCAL="${VOLUMES_LOCAL} -v ${INTAKE}:/logs"
+
 	PORTS="$((8009 + $I)):8000"
 
 	docker run -it \

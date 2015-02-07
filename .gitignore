@@ -7,11 +7,6 @@
 splunk*.deb
 
 #
-# Ignore all logs directories
-#
-*logs/
-
-#
 # These are written from templates, so we don't want them in revision control
 #
 splunk-search-head/outputs.conf
@@ -21,4 +16,11 @@ splunk-search-head/distsearch.conf
 # This is written if we are using runtime.sh in development
 #
 add-indexers.sh
+
+
+#
+# This is data exported from the Splunk instances
+#
+splunk-search-head/data/
+splunk-indexer/data/
 

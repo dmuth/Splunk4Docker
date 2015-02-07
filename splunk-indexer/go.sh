@@ -16,6 +16,7 @@ set -e
 ARG_DETATCH=""
 ARG_HELP=""
 ARG_FORCE_BUILD=""
+ARG_NUM=1
 ARG_CMD=""
 
 
@@ -26,6 +27,8 @@ ARG_CMD=""
 while test "$1"
 do
 	ARG=$1
+	ARG_NEXT=$2
+
 	if test "$ARG" == "-h"
 	then
 		ARG_HELP=1
@@ -38,6 +41,11 @@ do
 	then
 		ARG_FORCE_BUILD=1
 
+	elif test "$ARG" == "--num"
+	then
+		ARG_NUM=$2
+		shift
+
 	else 
 		ARG_CMD=$@
 		break
@@ -48,13 +56,23 @@ do
 
 done
 
+
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [--force-build] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--force-build] [--num <num indexers>] [<command to run in this image>]"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
 	exit 1
+fi
+
+if test "$ARG_NUM" -gt 1
+then
+	echo "# "
+	echo "# Multiple Indexers requested. Forcing -d for detachment..."
+	echo "# "
+	ARG_DETACH="-d"
+
 fi
 
 pushd $(dirname $0) > /dev/null
@@ -81,13 +99,12 @@ VOLUMES=""
 #
 # Make our logs visible to the outside world
 #
-VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs "
+#VOLUMES="${VOLUMES} -v ${DIR}/logs:/splunk-logs"
 #
 # Put the current directory in as /data-devel for development purposes
 #
 VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 
-#PORTS="-p 8000:8000" # Debugging
 
 #
 # Remove old images with "indexer" in the name.
@@ -100,14 +117,25 @@ then
 	docker rm $(docker ps -a |grep splunk_indexer | awk '{print $1}')
 fi
 
-echo "# "
-echo "# Running Docker image..."
-echo "# "
-docker run -it \
-	${ARG_DETACH} \
-	--name splunk_indexer1 \
-	${PORTS} \
-	${VOLUMES} \
-	dmuth/splunk_indexer ${ARG_CMD}
 
+#
+# Now run our indexers!
+#
+for I in $(seq 1 ${ARG_NUM})
+do
+	echo "# "
+	echo "# Running Docker image ${I}/${ARG_NUM}..."
+	echo "# "
+
+	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/logs/indexer-${I}:/splunk-logs"
+	PORTS="$((8000 + $I)):8000"
+
+	docker run -it \
+		${ARG_DETACH} \
+		--name splunk_indexer_${I} \
+		-p ${PORTS} \
+		${VOLUMES_LOCAL} \
+		dmuth/splunk_indexer ${ARG_CMD}
+
+done
 

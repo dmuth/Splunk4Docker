@@ -48,6 +48,11 @@ Wait a minute or two, and you should be able to connect to port 8000 on the host
 Search Head and Indexer containers export the contents of /opt/splunk/var to the Docker Host.  They can be found under `splunk-search-head/volumes` and `splunk-indexer/volumes` with names like `search-head-1` and `indexer-1`, where the number is the number of the host that was created.  These directories will persist after the containers exit and when they are restarted, allowing for log retention.
 
 
+# Log import
+
+Need to have some logs of your own indexed by Splunk?  No problem!  Just drop them in the directory volumes/index-intake-1/ or volumes/search-head-intake-1/ and they will be indexed instantly.  This directory also presists between Docker containers, so if you have kill and later restart a container, this data will be re-indexed.
+
+
 # Debugging Splunk
 
 Logs are stored `spunk-(search-head|indexer)/log/splunk/`.  Logs of interest will be `splunkd.log` for overall system operation and `audit.log` for a list of what searches are being done and what Indexers are connected to.

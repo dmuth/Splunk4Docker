@@ -70,6 +70,16 @@ This works great under CoreOS.  Under Ubuntu 14.04... not so much.  I ran into w
 
 # FAQ
 
+Q: What ports are used by the web servers?
+
+A: Ports 8000-8009 are used by the Search Head(s).  Ports 8010-8019 are used by the Indexers.
+
+
+Q: The credentials admin/changeme don't work on the Indexers!
+
+A: I had to change the passwords from the default because the Search Head(s) connect to the Indexers, and the Indexers won't let you use default credentials for connecting via port 8089.  Instead, the credentials are: admin/adminpw.  For the love of all that is sacred, please **change these** if you plan on using this code in production!
+
+
 Q: Why are you running the Splunk install script **inside** of the docker container instead of running it at container creation time?
 
 A: Splunk comes with a free license that is good for 60 days.  During development, I found it more helpful to use this approach to ensure that I can run my instances for longer if needed.

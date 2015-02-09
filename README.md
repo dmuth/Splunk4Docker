@@ -73,7 +73,6 @@ This works great under CoreOS.  Under Ubuntu 14.04... not so much.  I ran into w
 # TODO
 
 - I need to seeif I can add a switch that keeps from using Volumes when spinning up Docker.  This may fix issues in Ubuntu, at the cost of being harder to debug
-- Logfile intake from the host container
 - A script which autogenerates sample data.  This will be helpful for people who are new to Splunk.
 - Encryption on port 9998 on the indexers
  

@@ -57,6 +57,11 @@ Need to have some logs of your own indexed by Splunk?  No problem!  Just drop th
 
 Logs are stored `spunk-(search-head|indexer)/log/splunk/`.  Logs of interest will be `splunkd.log` for overall system operation and `audit.log` for a list of what searches are being done and what Indexers are connected to.
 
+To work on a specific container, run the `go.sh` script with "bash" as an argument. Example: `./splunk-search-head/go.sh bash`.
+That will spin up a Docker instance and put you in a root shell.  From there, run `/data-devel/runtime.sh` to run the
+script which installs and configure Splunk.  That directory is not ADDed to the Docker image, but rather mounted against
+the current directory, so any edits made on the local copy of `runtime.sh` will show up in `/data-devel/`.
+
 
 # Known Issues
 

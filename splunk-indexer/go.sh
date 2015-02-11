@@ -10,12 +10,16 @@
 set -e 
 
 
+pushd $(dirname $0) > /dev/null
+DIR=$(pwd)
+
 #
 # Check our arguments
 #
 ARG_DETATCH=""
 ARG_HELP=""
 ARG_FORCE_BUILD=""
+ARG_CLEAN=""
 ARG_NUM=1
 ARG_CMD=""
 
@@ -41,6 +45,10 @@ do
 	then
 		ARG_FORCE_BUILD=1
 
+	elif test "$ARG" == "--clean"
+	then
+		ARG_CLEAN=1
+
 	elif test "$ARG" == "--num"
 	then
 		ARG_NUM=$2
@@ -59,7 +67,11 @@ done
 
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [--rebuild] [--num <num indexers>] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--rebuild] [--clean] [--num <num indexers>] [<command to run in this image>]"
+	echo ""
+	echo "	-d		Detach from the image being run"
+	echo "	--rebuild	Force a rebuild the Docker image"
+	echo "	--clean		Remove the local volumes, including indexes and logs"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
@@ -75,8 +87,16 @@ then
 
 fi
 
-pushd $(dirname $0) > /dev/null
-DIR=$(pwd)
+if test "${ARG_CLEAN}"
+then
+	echo "# "
+	echo "# --clean specified, nuking contents of volumes/"
+	echo "# "
+	#
+	# This might not succeeed, because CoreOS does weird things with NFS mounts
+	#
+	rm -rf volumes/ || true
+fi
 
 if test ! "$(docker images |grep dmuth/splunk_indexer)"
 then
@@ -105,12 +125,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "indexer" in the name.
 #
-if test "$(docker ps -a |grep splunk_indexer | awk '{print $1}')"
+if test "$(docker ps -a |grep dmuth_splunk_indexer | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm $(docker ps -a |grep splunk_indexer | awk '{print $1}')
+	docker rm -f $(docker ps -a |grep dmuth_splunk_indexer | awk '{print $1}')
 fi
 
 
@@ -140,7 +160,7 @@ do
 
 	docker run -it \
 		${ARG_DETACH} \
-		--name splunk_indexer_${I} \
+		--name dmuth_splunk_indexer_${I} \
 		-p ${PORTS} \
 		${VOLUMES_LOCAL} \
 		dmuth/splunk_indexer ${ARG_CMD}

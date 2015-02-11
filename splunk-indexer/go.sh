@@ -37,7 +37,7 @@ do
 	then
 		ARG_DETACH="-d "
 
-	elif test "$ARG" == "--force-build"
+	elif test "$ARG" == "--rebuild"
 	then
 		ARG_FORCE_BUILD=1
 
@@ -59,7 +59,7 @@ done
 
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [--force-build] [--num <num indexers>] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--rebuild] [--num <num indexers>] [<command to run in this image>]"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
@@ -105,12 +105,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "indexer" in the name.
 #
-if test "$(docker ps -a |grep dmuth/splunk_indexer | awk '{print $1}')"
+if test "$(docker ps -a |grep splunk_indexer | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm $(docker ps -a |grep dmuth/splunk_indexer | awk '{print $1}')
+	docker rm $(docker ps -a |grep splunk_indexer | awk '{print $1}')
 fi
 
 

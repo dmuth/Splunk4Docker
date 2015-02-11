@@ -72,6 +72,10 @@ then
 	echo "# Installing Splunk..."
 	echo "# "
 	dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
+	#
+	# Set a little reminder for us to add indexers later
+	#
+	touch .add-indexers
 
 else
 	echo "# "
@@ -109,17 +113,14 @@ echo "# Starting up Splunk..."
 echo "# "
 /opt/splunk/bin/splunk --accept-license start 2>&1 | tee -a ${LOG}
 
-echo "# "
-echo "# Adding Indexers as Search Peers..."
-echo "# "
-if test ! -f .indexers-added
+if test -f ".add-indexers"
 then
 	echo "# "
-	echo "# Adding indexers"
+	echo "# Adding Indexers as Search Peers..."
 	echo "# "
 	${ADD_INDEXERS}
+	rm .add-indexers
 fi
-touch .indexers-added
 
 #
 # Finally, we want this script to run forever so that Docker doesn't exit

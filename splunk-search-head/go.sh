@@ -16,13 +16,6 @@ set -e
 pushd $(dirname $0) > /dev/null
 DIR=$(pwd)
 
-#
-# Remove relics from a previous run
-#
-if test -f .indexers-added
-then
-	rm .indexers-added 
-fi
 
 #
 # Check our arguments
@@ -164,12 +157,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "splunk_search_head" in the name.
 #
-if test "$(docker ps -a |grep dmuth_splunk_search_head | awk '{print $1}')"
+if test "$(docker ps -a |grep dmuth_splunk_search_head | grep -v ,dmuth | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm -f $(docker ps -a |grep dmuth_splunk_search_head | awk '{print $1}')
+	docker rm -f $(docker ps -a |grep dmuth_splunk_search_head | grep -v ,dmuth | awk '{print $1}')
 fi
 
 

@@ -13,7 +13,10 @@ set -e
 #
 LOG="/splunk-data/output.txt"
 
-DIR=$(dirname $0)
+#
+# cd to the directory that this script is in
+#
+pushd $(dirname $0) > /dev/null
 
 #
 # Install Splunk
@@ -23,7 +26,7 @@ then
 	echo "# "
 	echo "# Installing Splunk..."
 	echo "# "
-	dpkg -i $DIR/splunk.deb 2>&1 | tee -a ${LOG}
+	dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
 
 else
 	echo "# "
@@ -31,7 +34,6 @@ else
 	echo "# "
 
 fi
-
 
 
 echo "# "
@@ -50,11 +52,11 @@ ln -sf /splunk-data/ /opt/splunk/var
 #
 # Copy in configuration settings
 #
-cp $DIR/passwd /opt/splunk/etc/passwd
-cp $DIR/inputs.conf /opt/splunk/etc/system/local
-cp $DIR/server.conf /opt/splunk/etc/system/local
+cp passwd /opt/splunk/etc/passwd
+cp inputs.conf /opt/splunk/etc/system/local
+cp server.conf /opt/splunk/etc/system/local
 mkdir -p /opt/splunk/etc/users/admin/user-prefs/local
-cp $DIR/user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
+cp user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
 
 #
 # Run Splunk in the foreground

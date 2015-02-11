@@ -13,14 +13,25 @@ set -e
 #
 LOG="/splunk-data/output.txt"
 
+DIR=$(dirname $0)
 
 #
 # Install Splunk
 #
-echo "# "
-echo "# Installing Splunk..."
-echo "# "
-dpkg -i /data-install/splunk.deb 2>&1 | tee -a ${LOG}
+if test ! -f /opt/splunk/bin/splunk
+then
+	echo "# "
+	echo "# Installing Splunk..."
+	echo "# "
+	dpkg -i $DIR/splunk.deb 2>&1 | tee -a ${LOG}
+
+else
+	echo "# "
+	echo "# Splunk is already installed, skipping installation."
+	echo "# "
+
+fi
+
 
 
 echo "# "
@@ -32,18 +43,18 @@ echo "# "
 # as Splunk does funny things with symlinks elsewhere when installing it.
 #
 mkdir -p /opt/splunk/
-ln -s /splunk-data/ /opt/splunk/var
+ln -sf /splunk-data/ /opt/splunk/var
 /var/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
 
 
 #
 # Copy in configuration settings
 #
-cp /data-install/passwd /opt/splunk/etc/passwd
-cp /data-install/inputs.conf /opt/splunk/etc/system/local
-cp /data-install/server.conf /opt/splunk/etc/system/local
+cp $DIR/passwd /opt/splunk/etc/passwd
+cp $DIR/inputs.conf /opt/splunk/etc/system/local
+cp $DIR/server.conf /opt/splunk/etc/system/local
 mkdir -p /opt/splunk/etc/users/admin/user-prefs/local
-cp /data-install/user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
+cp $DIR/user-prefs.conf /opt/splunk/etc/users/admin/user-prefs/local
 
 #
 # Run Splunk in the foreground

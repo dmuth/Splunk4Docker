@@ -1,8 +1,19 @@
 
+
 #
-# Send output to these servers
+# Send output to these servers over SSL
 #
 [tcpout:docker]
-server = %IPS%:9997
+server = %IPS%:9998
+
+sslRootCAPath = /opt/splunk/etc/auth/cacert.pem
+sslCertPath = /opt/splunk/etc/auth/server.pem
+sslPassword = password
+sslVerifyServerCert = true
+
+#
+# This is set to avoid getting an SSL HELLO ERROR on the Indexer.
+#
+compressed = true
 
 

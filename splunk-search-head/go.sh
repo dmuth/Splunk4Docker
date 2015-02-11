@@ -157,12 +157,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "splunk_search_head" in the name.
 #
-if test "$(docker ps -a |grep dmuth_splunk_search_head | grep -v ,dmuth | awk '{print $1}')"
+if test "$(docker ps -a |grep splunk_search_head | grep -v ,splunk | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm -f $(docker ps -a |grep dmuth_splunk_search_head | grep -v ,dmuth | awk '{print $1}')
+	docker rm -f $(docker ps -a |grep splunk_search_head | grep -v ,splunk | awk '{print $1}')
 fi
 
 
@@ -206,7 +206,7 @@ do
 
 	docker run -it \
 		${ARG_DETACH} \
-		--name dmuth_splunk_search_head_${I} \
+		--name splunk_search_head_${I} \
 		-p ${PORTS} \
 		${VOLUMES_LOCAL} \
 		${LINKS} \

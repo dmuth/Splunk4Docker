@@ -13,7 +13,6 @@ set -e
 #
 LOG="/splunk-data/output.txt"
 
-
 #
 # cd to the directory that this script is in
 #
@@ -67,10 +66,19 @@ fi
 #
 # Install Splunk
 #
-echo "# "
-echo "# Installing Splunk..."
-echo "# "
-dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
+if test ! -f /opt/splunk/bin/splunk
+then
+	echo "# "
+	echo "# Installing Splunk..."
+	echo "# "
+	dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
+
+else
+	echo "# "
+	echo "# Splunk is already installed, skipping installation."
+	echo "# "
+
+fi
 
 
 #
@@ -78,9 +86,8 @@ dpkg -i splunk.deb 2>&1 | tee -a ${LOG}
 # as Splunk does funny things with symlinks elsewhere when installing it.
 #
 mkdir -p /opt/splunk/
-ln -s /splunk-data/ /opt/splunk/var
+ln -sf /splunk-data/ /opt/splunk/var
 /opt/splunk/bin/splunk --accept-license status 2>&1 | tee -a ${LOG}
-
 
 
 #
@@ -105,7 +112,14 @@ echo "# "
 echo "# "
 echo "# Adding Indexers as Search Peers..."
 echo "# "
-${ADD_INDEXERS}
+if test ! -f .indexers-added
+then
+	echo "# "
+	echo "# Adding indexers"
+	echo "# "
+	${ADD_INDEXERS}
+fi
+touch .indexers-added
 
 #
 # Finally, we want this script to run forever so that Docker doesn't exit

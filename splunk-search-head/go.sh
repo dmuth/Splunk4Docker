@@ -11,11 +11,26 @@ set -e
 
 
 #
+# cd to the directory that this script is in
+#
+pushd $(dirname $0) > /dev/null
+DIR=$(pwd)
+
+#
+# Remove relics from a previous run
+#
+if test -f .indexers-added
+then
+	rm .indexers-added 
+fi
+
+#
 # Check our arguments
 #
 ARG_DETATCH=""
 ARG_HELP=""
 ARG_FORCE_BUILD=""
+ARG_CLEAN=""
 ARG_CMD=""
 ARG_NUM=1
 
@@ -41,6 +56,10 @@ do
 	then
 		ARG_FORCE_BUILD=1
 
+	elif test "$ARG" == "--clean"
+	then
+		ARG_CLEAN=1
+
 	elif test "$ARG" == "--num"
 	then
 		ARG_NUM=$2
@@ -62,7 +81,11 @@ done
 #
 if test "$ARG_HELP"
 then
-	echo "Syntax: $0 [-d] [--rebuild] [--num <num indexers>] [<command to run in this image>]"
+	echo "Syntax: $0 [-d] [--rebuild] [--clean] [--num <num indexers>] [<command to run in this image>]"
+	echo ""
+	echo "	-d		Detach from the image being run"
+	echo "	--rebuild	Force a rebuild the Docker image"
+	echo "	--clean		Remove the local volumes, including indexes and logs"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"
 	echo ""
@@ -78,12 +101,16 @@ then
 
 fi
 
-#
-# cd to the directory that this script is in
-#
-pushd $(dirname $0) > /dev/null
-DIR=$(pwd)
-
+if test "${ARG_CLEAN}"
+then
+	echo "# "
+	echo "# --clean specified, nuking contents of volumes/"
+	echo "# "
+	#
+	# This might not succeeed, because CoreOS does weird things with NFS mounts
+	#
+	rm -rf volumes/ || true
+fi
 
 #
 # If there are Indexers, not them and link to them
@@ -137,12 +164,12 @@ VOLUMES="${VOLUMES} -v ${DIR}:/data-devel "
 #
 # Remove old images with "splunk_search_head" in the name.
 #
-if test "$(docker ps -a |grep splunk_search_head | awk '{print $1}')"
+if test "$(docker ps -a |grep dmuth_splunk_search_head | awk '{print $1}')"
 then
 	echo "# "
 	echo "# Removing old Docker images with this name..."
 	echo "# "
-	docker rm $(docker ps -a |grep splunk_search_head | awk '{print $1}')
+	docker rm -f $(docker ps -a |grep dmuth_splunk_search_head | awk '{print $1}')
 fi
 
 
@@ -173,6 +200,7 @@ do
 	#
 	VOLUMES_LOCAL="${VOLUMES} -v ${DIR}/volumes/search-head-${I}:/splunk-data"
 
+
 	#
 	# Create a directory for intake in Splunk and put a dummy file in there
 	#
@@ -185,7 +213,7 @@ do
 
 	docker run -it \
 		${ARG_DETACH} \
-		--name splunk_search_head_${I} \
+		--name dmuth_splunk_search_head_${I} \
 		-p ${PORTS} \
 		${VOLUMES_LOCAL} \
 		${LINKS} \

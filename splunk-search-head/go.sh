@@ -77,7 +77,7 @@ then
 	echo "Syntax: $0 [-d] [--rebuild] [--clean] [--num <num indexers>] [<command to run in this image>]"
 	echo ""
 	echo "	-d		Detach from the image being run"
-	echo "	--rebuild	Force a rebuild the Docker image"
+	echo "	--rebuild	Force a rebuild of the Docker image"
 	echo "	--clean		Remove the local volumes, including indexes and logs"
 	echo ""
 	echo "To make this image be interactive, type '$0 bash'"

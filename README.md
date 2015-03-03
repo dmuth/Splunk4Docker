@@ -16,7 +16,7 @@ Next, download a version of Splunk in .deb package format.  As of this writing, 
 
 - `vagrant ssh`
 - `cd vagrant/splunk-search-head`
-- `ln /path/to/splunk-6.2.1-245427-linux-2.6-amd64.deb splunk.dev`
+- `ln /path/to/splunk-6.2.1-245427-linux-2.6-amd64.deb splunk.deb`
 - `./go -d`
 
 This will build an image from the Dockerfile, run the image, and then run `runtime.sh` within the image to install Splunk.

@@ -1,4 +1,6 @@
 
+[**Edit:** This has since been deprecated! Please use *splunk-lab* instead: https://github.com/dmuth/splunk-lab]
+
 # Splunk4Docker
 
 
